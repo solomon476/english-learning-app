@@ -10,5 +10,5 @@ directory = "dist"
 [[d1_databases]]
 binding = "DB" # Available inside Workers / Functions as env.DB
 database_name = "solian-wolves-db"
-database_id = "your-d1-database-id-here" # Replace after running: npx wrangler d1 create solian-wolves-db
+database_id = "f8d03ffe-ca46-4517-892f-260c8d9329cc"
 migrations_dir = "cloudflare/migrations"
