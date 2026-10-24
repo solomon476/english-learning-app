@@ -1,0 +1,14 @@
+name = "solian-wolves-learning"
+main = "src/main.tsx"
+compatibility_date = "2024-10-24"
+compatibility_flags = ["nodejs_compat"]
+
+[assets]
+directory = "dist"
+
+# Cloudflare D1 Serverless Database Binding
+[[d1_databases]]
+binding = "DB" # Available inside Workers / Functions as env.DB
+database_name = "solian-wolves-db"
+database_id = "your-d1-database-id-here" # Replace after running: npx wrangler d1 create solian-wolves-db
+migrations_dir = "cloudflare/migrations"
