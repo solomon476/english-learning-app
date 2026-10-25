@@ -1,6 +1,7 @@
-import React from 'react';
-import { BookOpen, Brain, Flame, Shield, User, FileText } from 'lucide-react';
-import { UserProfile } from '../types';
+import React, { useState } from 'react';
+import { BookOpen, Brain, Flame, Shield, User, FileText, Volume2, VolumeX, Sparkles } from 'lucide-react';
+import type { UserProfile } from '../types';
+import { sounds } from '../utils/soundEffects';
 
 interface HeaderProps {
   activeView: 'catalog' | 'lesson' | 'quiz' | 'profile' | 'admin' | 'blueprint';
@@ -17,31 +18,42 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenTutor,
   hasActiveLesson
 }) => {
+  const [soundOn, setSoundOn] = useState<boolean>(sounds.isEnabled());
+
+  const handleToggleSound = () => {
+    const newState = sounds.toggleSound();
+    setSoundOn(newState);
+    if (newState) sounds.playPop();
+  };
+
+  const handleNavClick = (view: 'catalog' | 'lesson' | 'quiz' | 'profile' | 'admin' | 'blueprint') => {
+    sounds.playPop();
+    onNavigate(view);
+  };
+
   return (
     <header className="site-header" role="banner">
       <div className="header-inner">
-        {/* Brand Identity */}
+        {/* Brand Identity with Mascot Emblem */}
         <div 
           className="brand-wrapper" 
-          onClick={() => onNavigate('catalog')}
+          onClick={() => handleNavClick('catalog')}
           role="button"
           tabIndex={0}
           id="nav-brand-logo"
         >
-          <div className="brand-logo-crest">
-            <svg width="24" height="24" viewBox="0 0 64 64" fill="none">
-              <path d="M14 46 L20 22 L28 32 L36 14 L44 30 L50 22 L48 46 Z" fill="url(#crestGrad)" />
-              <defs>
-                <linearGradient id="crestGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#38bdf8" />
-                  <stop offset="100%" stopColor="#f59e0b" />
-                </linearGradient>
-              </defs>
-            </svg>
+          <div className="brand-logo-crest" style={{ overflow: 'hidden', padding: 0 }}>
+            <img 
+              src="/mascot-welcome.jpg" 
+              alt="Wolfie Mascot" 
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+            />
           </div>
           <div className="brand-text-container">
-            <span className="brand-title">Solian Wolves</span>
-            <span className="brand-subtitle">Learning Platform</span>
+            <span className="brand-title" style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+              Solian Wolves <span style={{ fontSize: '0.85rem' }}>🐾</span>
+            </span>
+            <span className="brand-subtitle">Learn with Wolfie</span>
           </div>
         </div>
 
@@ -50,7 +62,7 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             id="nav-catalog-btn"
             className={`nav-btn ${activeView === 'catalog' ? 'active' : ''}`}
-            onClick={() => onNavigate('catalog')}
+            onClick={() => handleNavClick('catalog')}
           >
             <BookOpen size={16} />
             <span>Topics</span>
@@ -60,7 +72,7 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               id="nav-lesson-btn"
               className={`nav-btn ${activeView === 'lesson' ? 'active' : ''}`}
-              onClick={() => onNavigate('lesson')}
+              onClick={() => handleNavClick('lesson')}
             >
               <span>Current Lesson</span>
             </button>
@@ -69,7 +81,7 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             id="nav-quiz-btn"
             className={`nav-btn ${activeView === 'quiz' ? 'active' : ''}`}
-            onClick={() => onNavigate('quiz')}
+            onClick={() => handleNavClick('quiz')}
           >
             <span>Practice Quiz</span>
           </button>
@@ -77,48 +89,85 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             id="nav-profile-btn"
             className={`nav-btn ${activeView === 'profile' ? 'active' : ''}`}
-            onClick={() => onNavigate('profile')}
+            onClick={() => handleNavClick('profile')}
           >
             <User size={16} />
-            <span>Progress & Privacy</span>
+            <span>My Journey</span>
           </button>
 
           <button
             id="nav-admin-btn"
             className={`nav-btn ${activeView === 'admin' ? 'active' : ''}`}
-            onClick={() => onNavigate('admin')}
+            onClick={() => handleNavClick('admin')}
           >
             <Shield size={16} />
-            <span>Editorial Admin</span>
+            <span>Admin</span>
           </button>
 
           <button
             id="nav-blueprint-btn"
             className={`nav-btn ${activeView === 'blueprint' ? 'active' : ''}`}
-            onClick={() => onNavigate('blueprint')}
+            onClick={() => handleNavClick('blueprint')}
           >
             <FileText size={16} />
-            <span>Blueprint V1.0</span>
+            <span>Blueprint</span>
           </button>
         </nav>
 
-        {/* User Status Badges & Tutor Trigger */}
+        {/* Gamified Status Counters (Streak, Gems & Audio) */}
         <div className="header-actions">
+          {/* Gems Counter */}
+          <div 
+            style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '0.35rem', 
+              padding: '0.35rem 0.75rem', 
+              background: 'rgba(56, 189, 248, 0.12)', 
+              border: '1px solid rgba(56, 189, 248, 0.35)', 
+              borderRadius: '20px', 
+              fontSize: '0.825rem', 
+              fontWeight: 800, 
+              color: '#38bdf8' 
+            }}
+            title="Learning Gems Earned"
+          >
+            <span>💎</span>
+            <span>240</span>
+          </div>
+
+          {/* Daily Streak Flame with Animation */}
           {userProfile && (
             <div className="streak-badge" title="Consecutive daily learning streak">
-              <Flame size={15} />
+              <span className="flame-wiggle">🔥</span>
               <span>{userProfile.streakDays}d Streak</span>
             </div>
           )}
 
+          {/* Sound Mute Toggle */}
+          <button
+            id="audio-toggle-btn"
+            className="btn-ghost"
+            style={{ padding: '0.4rem', color: soundOn ? '#38bdf8' : '#64748b' }}
+            onClick={handleToggleSound}
+            title={soundOn ? 'Sound Effects Enabled (Click to Mute)' : 'Sound Effects Muted (Click to Enable)'}
+            aria-label="Toggle Sound Effects"
+          >
+            {soundOn ? <Volume2 size={18} /> : <VolumeX size={18} />}
+          </button>
+
+          {/* AI Tutor 3D Button */}
           <button
             id="header-open-tutor-btn"
             className="btn btn-primary"
-            style={{ padding: '0.45rem 0.95rem', fontSize: '0.825rem' }}
-            onClick={onOpenTutor}
+            style={{ padding: '0.5rem 1.1rem', fontSize: '0.85rem' }}
+            onClick={() => {
+              sounds.playPop();
+              onOpenTutor();
+            }}
           >
-            <Brain size={15} />
-            <span>AI Tutor</span>
+            <Brain size={16} />
+            <span>Ask Wolfie</span>
           </button>
         </div>
       </div>

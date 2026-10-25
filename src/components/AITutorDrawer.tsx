@@ -12,8 +12,9 @@ import {
   RotateCcw,
   DollarSign
 } from 'lucide-react';
-import { TutorMessage, TutorMode, ComplexityLevel } from '../types';
+import type { TutorMessage, TutorMode, ComplexityLevel } from '../types';
 import { TutorService } from '../services/tutorService';
+import { sounds } from '../utils/soundEffects';
 
 interface AITutorDrawerProps {
   isOpen: boolean;
@@ -31,36 +32,34 @@ export const AITutorDrawer: React.FC<AITutorDrawerProps> = ({
   const [messages, setMessages] = useState<TutorMessage[]>([]);
   const [inputText, setInputText] = useState<string>('');
   const [mode, setMode] = useState<TutorMode>('explain');
-  const [level, setLevel] = useState<ComplexityLevel>('beginner');
+  const [level] = useState<ComplexityLevel>('beginner');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [creditsRemaining, setCreditsRemaining] = useState<number>(17);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Load history on mount
   useEffect(() => {
     const history = TutorService.getHistory();
     if (history.length > 0) {
       setMessages(history);
     } else {
-      // Welcome message
       setMessages([
         {
           id: 'welcome-01',
           role: 'assistant',
-          content: `Welcome to the Solian Wolves AI Tutor! 🐺
+          content: `Awoo! 🐾 Welcome to Wolfie's AI Study Den!
 
-I am anchored strictly to our verified curriculum in English rhetoric, critical thinking, and system principles. 
+I am anchored strictly to our verified curriculum in English rhetoric, critical thinking, and system principles.
 
-Choose a mode above to get started:
-• 💡 **Explain**: Analogies & concept breakdowns
-• 🧭 **Explore**: Follow connected ideas without losing your path
+Pick your quest mode above:
+• 💡 **Explain**: Relatable analogies & plain-English breakdowns
+• 🧭 **Explore**: Follow curiosity rabbit-holes safely
 • 🎯 **Practice**: Interactive identification drills
 • 🔬 **Go Deeper**: Rigorous first-principles & academic citations`,
           mode: 'explain',
           followUpSuggestions: [
-            'Explain active voice using a football analogy',
+            'Explain active voice using a sports analogy',
             'Why does the availability heuristic mislead us on plane crashes?',
-            'Give me a quick active vs passive identification drill'
+            'Give me a quick active vs passive drill'
           ],
           createdAt: new Date().toISOString()
         }
@@ -68,14 +67,12 @@ Choose a mode above to get started:
     }
   }, []);
 
-  // Handle external trigger queries
   useEffect(() => {
     if (initialQuery && isOpen) {
       setInputText(initialQuery);
     }
   }, [initialQuery, isOpen]);
 
-  // Auto-scroll chat to bottom
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isLoading]);
@@ -86,7 +83,10 @@ Choose a mode above to get started:
     const query = (textToSend || inputText).trim();
     if (!query || isLoading) return;
 
+    sounds.playPop();
+
     if (creditsRemaining <= 0) {
+      sounds.playError();
       alert('Hourly tutor quota reached (20 queries/hr). Please wait or review existing explanations.');
       return;
     }
@@ -113,7 +113,9 @@ Choose a mode above to get started:
       });
 
       setMessages((prev) => [...prev, response]);
+      sounds.playSuccess();
     } catch {
+      sounds.playError();
       setMessages((prev) => [
         ...prev,
         {
@@ -130,21 +132,24 @@ Choose a mode above to get started:
   };
 
   const handleClearHistory = () => {
+    sounds.playPop();
     TutorService.clearHistory();
     setMessages([]);
   };
 
   return (
     <aside className="tutor-drawer" role="dialog" aria-label="Solian Wolves AI Tutor">
-      {/* Header */}
+      {/* Header with Cartoon Mascot Avatar */}
       <div className="tutor-header">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-          <div style={{ width: '30px', height: '30px', borderRadius: '8px', background: 'rgba(56, 189, 248, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Brain size={18} color="#38bdf8" />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <div className="mascot-avatar-circle" style={{ width: '42px', height: '42px', border: '2px solid #38bdf8' }}>
+            <img src="/mascot-tutor.jpg" alt="Wolfie" />
           </div>
           <div>
-            <h3 style={{ fontSize: '1rem', margin: 0, color: '#ffffff' }}>Grounded AI Tutor</h3>
-            <span style={{ fontSize: '0.7rem', color: '#10b981', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+            <h3 style={{ fontSize: '1.05rem', margin: 0, color: '#ffffff', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+              Wolfie AI Tutor 🐾
+            </h3>
+            <span style={{ fontSize: '0.7rem', color: '#10b981', display: 'flex', alignItems: 'center', gap: '0.25rem', fontWeight: 700 }}>
               ● Verified Curriculum Sandbox
             </span>
           </div>
@@ -164,7 +169,10 @@ Choose a mode above to get started:
             id="tutor-close-btn"
             className="btn btn-ghost" 
             style={{ padding: '0.25rem 0.5rem' }} 
-            onClick={onClose} 
+            onClick={() => {
+              sounds.playPop();
+              onClose();
+            }} 
             title="Close Tutor"
           >
             <X size={18} />
@@ -172,12 +180,15 @@ Choose a mode above to get started:
         </div>
       </div>
 
-      {/* 4 Pedagogical Modes Selector (Section 7.1) */}
+      {/* 4 Pedagogical Modes Selector */}
       <div className="tutor-modes-bar" role="tablist">
         <button
           id="mode-explain-btn"
           className={`tutor-mode-btn ${mode === 'explain' ? 'active' : ''}`}
-          onClick={() => setMode('explain')}
+          onClick={() => {
+            sounds.playPop();
+            setMode('explain');
+          }}
         >
           <Sparkles size={12} style={{ display: 'inline', marginRight: '4px' }} />
           Explain
@@ -185,7 +196,10 @@ Choose a mode above to get started:
         <button
           id="mode-explore-btn"
           className={`tutor-mode-btn ${mode === 'explore' ? 'active' : ''}`}
-          onClick={() => setMode('explore')}
+          onClick={() => {
+            sounds.playPop();
+            setMode('explore');
+          }}
         >
           <Compass size={12} style={{ display: 'inline', marginRight: '4px' }} />
           Explore
@@ -193,7 +207,10 @@ Choose a mode above to get started:
         <button
           id="mode-practice-btn"
           className={`tutor-mode-btn ${mode === 'practice' ? 'active' : ''}`}
-          onClick={() => setMode('practice')}
+          onClick={() => {
+            sounds.playPop();
+            setMode('practice');
+          }}
         >
           <Target size={12} style={{ display: 'inline', marginRight: '4px' }} />
           Practice
@@ -201,7 +218,10 @@ Choose a mode above to get started:
         <button
           id="mode-deepdive-btn"
           className={`tutor-mode-btn ${mode === 'deep_dive' ? 'active' : ''}`}
-          onClick={() => setMode('deep_dive')}
+          onClick={() => {
+            sounds.playPop();
+            setMode('deep_dive');
+          }}
         >
           <BookOpen size={12} style={{ display: 'inline', marginRight: '4px' }} />
           Go Deeper
@@ -217,7 +237,7 @@ Choose a mode above to get started:
             {/* Cited Sources Card */}
             {msg.sources && msg.sources.length > 0 && (
               <div style={{ marginTop: '0.65rem', paddingTop: '0.5rem', borderTop: '1px solid rgba(255, 255, 255, 0.1)', fontSize: '0.75rem' }}>
-                <span style={{ color: '#38bdf8', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                <span style={{ color: '#38bdf8', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                   <ExternalLink size={11} /> Grounded in {msg.sources[0].title}
                 </span>
               </div>
@@ -234,15 +254,15 @@ Choose a mode above to get started:
             {/* Follow-up Suggestions Chips */}
             {msg.followUpSuggestions && msg.followUpSuggestions.length > 0 && (
               <div style={{ marginTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
-                <span style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 600 }}>Suggested Follow-ups:</span>
+                <span style={{ fontSize: '0.725rem', color: '#94a3b8', fontWeight: 700 }}>Follow-up Quests:</span>
                 {msg.followUpSuggestions.map((sugg, i) => (
                   <button
                     key={i}
                     className="btn btn-secondary"
-                    style={{ fontSize: '0.75rem', padding: '0.3rem 0.6rem', textAlign: 'left', justifyContent: 'flex-start' }}
+                    style={{ fontSize: '0.775rem', padding: '0.4rem 0.75rem', textAlign: 'left', justifyContent: 'flex-start' }}
                     onClick={() => handleSend(sugg)}
                   >
-                    👉 {sugg}
+                    🐾 {sugg}
                   </button>
                 ))}
               </div>
@@ -253,7 +273,7 @@ Choose a mode above to get started:
         {isLoading && (
           <div className="chat-bubble assistant" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#94a3b8' }}>
             <Sparkles size={16} className="float-animation" color="#38bdf8" />
-            <span>Consulting verified curriculum sources...</span>
+            <span>Wolfie is sniffing through the verified curriculum...</span>
           </div>
         )}
 
@@ -261,7 +281,7 @@ Choose a mode above to get started:
       </div>
 
       {/* Security Benchmark Quick Test */}
-      <div style={{ padding: '0.35rem 1rem', background: 'rgba(255, 255, 255, 0.02)', borderTop: '1px solid var(--border-subtle)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ padding: '0.4rem 1rem', background: 'rgba(255, 255, 255, 0.02)', borderTop: '1px solid var(--border-subtle)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <button
           className="btn btn-ghost"
           style={{ fontSize: '0.7rem', color: '#f43f5e', padding: 0 }}
@@ -276,7 +296,7 @@ Choose a mode above to get started:
         </span>
       </div>
 
-      {/* Input Form */}
+      {/* Input Form with 3D Send Button */}
       <form 
         className="tutor-input-area"
         onSubmit={(e) => {
@@ -288,7 +308,7 @@ Choose a mode above to get started:
           id="tutor-chat-input"
           type="text"
           className="tutor-input"
-          placeholder={`Ask the tutor in '${mode}' mode...`}
+          placeholder={`Ask Wolfie in '${mode}' mode...`}
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
           disabled={isLoading}
@@ -298,7 +318,7 @@ Choose a mode above to get started:
           id="tutor-send-btn"
           type="submit"
           className="btn btn-primary"
-          style={{ padding: '0.65rem 0.95rem' }}
+          style={{ padding: '0.65rem 1rem' }}
           disabled={!inputText.trim() || isLoading}
         >
           <Send size={16} />

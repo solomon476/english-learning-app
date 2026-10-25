@@ -10,6 +10,7 @@ import { ProfileProgress } from './components/ProfileProgress';
 import { AdminWorkflow } from './components/AdminWorkflow';
 import { AITutorDrawer } from './components/AITutorDrawer';
 import { BlueprintDrawer } from './components/BlueprintDrawer';
+import { sounds } from './utils/soundEffects';
 
 export function App() {
   const [activeView, setActiveView] = useState<'catalog' | 'lesson' | 'quiz' | 'profile' | 'admin' | 'blueprint'>('catalog');
@@ -190,16 +191,25 @@ export function App() {
         )}
       </main>
 
-      {/* Floating Action Button for AI Tutor */}
+      {/* Floating Action Button for AI Tutor with Wolfie Mascot */}
       {!isTutorOpen && (
         <button
           id="floating-tutor-fab"
-          className="tutor-launcher-fab"
-          onClick={() => setIsTutorOpen(true)}
-          aria-label="Open Grounded AI Tutor"
+          className="tutor-launcher-fab mascot-bob"
+          onClick={() => {
+            sounds.playPop();
+            setIsTutorOpen(true);
+          }}
+          aria-label="Ask Wolfie AI Tutor"
+          style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', padding: '0.45rem 1.25rem 0.45rem 0.5rem', borderRadius: '30px' }}
         >
-          <Brain size={20} />
-          <span>AI Tutor</span>
+          <div style={{ width: '42px', height: '42px', borderRadius: '50%', overflow: 'hidden', border: '2px solid #ffffff', flexShrink: 0 }}>
+            <img src="/mascot-tutor.jpg" alt="Wolfie" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          </div>
+          <div style={{ textAlign: 'left', lineHeight: 1.15 }}>
+            <span style={{ display: 'block', fontSize: '0.9rem', fontWeight: 800 }}>Ask Wolfie 🐾</span>
+            <span style={{ fontSize: '0.7rem', color: '#e0f2fe' }}>AI Study Buddy</span>
+          </div>
         </button>
       )}
 

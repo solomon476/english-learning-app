@@ -8,10 +8,13 @@ import {
   RotateCcw, 
   Send, 
   AlertCircle,
-  HelpCircle
+  HelpCircle,
+  Zap,
+  Sparkles
 } from 'lucide-react';
-import { Quiz, QuizAttemptResult } from '../types';
+import type { Quiz, QuizAttemptResult } from '../types';
 import { ApiService } from '../services/api';
+import { sounds } from '../utils/soundEffects';
 
 interface QuizViewProps {
   quiz: Quiz;
@@ -30,7 +33,8 @@ export const QuizView: React.FC<QuizViewProps> = ({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleSelectOption = (questionId: string, optionId: string) => {
-    if (attemptResult) return; // Locked after submission
+    if (attemptResult) return;
+    sounds.playPop();
     setSelectedAnswers((prev) => ({
       ...prev,
       [questionId]: optionId
@@ -38,9 +42,9 @@ export const QuizView: React.FC<QuizViewProps> = ({
   };
 
   const handleSubmit = async () => {
-    // Check all questions answered
     const unansweredCount = quiz.questions.filter((q) => !selectedAnswers[q.id]).length;
     if (unansweredCount > 0) {
+      sounds.playError();
       setErrorMessage(`Please answer all questions before submitting (${unansweredCount} remaining).`);
       return;
     }
@@ -49,17 +53,20 @@ export const QuizView: React.FC<QuizViewProps> = ({
     setIsSubmitting(true);
 
     try {
-      // Call server validation endpoint (Section 6.5)
       const result = await ApiService.submitQuizAttempt(quiz.id, selectedAnswers);
       setAttemptResult(result);
       onCompleted(result);
 
       if (result.passed) {
+        // Play celebratory victory fanfare!
+        sounds.playVictory();
         confetti({
-          particleCount: 80,
-          spread: 70,
-          origin: { y: 0.6 }
+          particleCount: 100,
+          spread: 80,
+          origin: { y: 0.55 }
         });
+      } else {
+        sounds.playError();
       }
     } catch (err: unknown) {
       setErrorMessage(err instanceof Error ? err.message : 'Failed to submit quiz attempt.');
@@ -69,6 +76,7 @@ export const QuizView: React.FC<QuizViewProps> = ({
   };
 
   const handleRetry = () => {
+    sounds.playPop();
     setSelectedAnswers({});
     setAttemptResult(null);
     setErrorMessage(null);
@@ -80,62 +88,90 @@ export const QuizView: React.FC<QuizViewProps> = ({
       <button 
         id="quiz-back-btn"
         className="btn btn-ghost" 
-        onClick={onBack}
+        onClick={() => {
+          sounds.playPop();
+          onBack();
+        }}
         style={{ paddingLeft: 0, marginBottom: '1.25rem' }}
       >
         <ArrowLeft size={16} />
         <span>Back to Lesson</span>
       </button>
 
-      {/* Quiz Header */}
+      {/* Quiz Header with Wolfie Mascot Guide */}
       <div className="glass-card" style={{ padding: '1.75rem', marginBottom: '1.5rem' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
-          <div>
-            <span style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'var(--brand-cyan)', fontWeight: 700, letterSpacing: '0.08em' }}>
-              Comprehension Drill
-            </span>
-            <h1 style={{ fontSize: '1.75rem', marginTop: '0.2rem', marginBottom: '0.25rem' }}>
-              {quiz.title}
-            </h1>
-            <p style={{ margin: 0, fontSize: '0.875rem' }}>
-              Pass threshold: {quiz.passThresholdPercent}% · Evaluated server-side
-            </p>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <div className="mascot-avatar-circle" style={{ width: '60px', height: '60px' }}>
+              <img src="/mascot-tutor.jpg" alt="Wolfie with glasses" />
+            </div>
+            <div>
+              <span style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'var(--brand-cyan)', fontWeight: 800, letterSpacing: '0.08em' }}>
+                Wolfie's Practice Drill
+              </span>
+              <h1 style={{ fontSize: '1.75rem', marginTop: '0.15rem', marginBottom: '0.2rem' }}>
+                {quiz.title}
+              </h1>
+              <p style={{ margin: 0, fontSize: '0.85rem' }}>
+                Pass threshold: {quiz.passThresholdPercent}% · Evaluated server-side · Earn <strong>+100 XP</strong> & <strong>15 Gems 💎</strong>
+              </p>
+            </div>
           </div>
 
-          <div style={{ padding: '0.5rem 1rem', background: 'rgba(255, 255, 255, 0.04)', borderRadius: '10px', border: '1px solid var(--border-subtle)' }}>
+          <div style={{ padding: '0.5rem 1rem', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '12px', border: '1px solid var(--border-subtle)' }}>
             <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>Questions: </span>
             <strong style={{ color: '#ffffff' }}>{quiz.questions.length}</strong>
           </div>
         </div>
       </div>
 
-      {/* Post-Submission Score Banner */}
+      {/* Post-Submission Score Banner with Celebratory Wolfie */}
       {attemptResult && (
         <div 
           className="glass-card" 
           style={{ 
-            padding: '1.75rem', 
+            padding: '2rem', 
             marginBottom: '1.75rem',
-            border: attemptResult.passed ? '1px solid rgba(16, 185, 129, 0.4)' : '1px solid rgba(244, 63, 94, 0.4)',
+            border: attemptResult.passed ? '2px solid rgba(16, 185, 129, 0.6)' : '2px solid rgba(244, 63, 94, 0.6)',
             background: attemptResult.passed 
-              ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(14, 25, 48, 0.9) 100%)' 
-              : 'linear-gradient(135deg, rgba(244, 63, 94, 0.12) 0%, rgba(14, 25, 48, 0.9) 100%)'
+              ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.18) 0%, rgba(14, 25, 48, 0.95) 100%)' 
+              : 'linear-gradient(135deg, rgba(244, 63, 94, 0.18) 0%, rgba(14, 25, 48, 0.95) 100%)'
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
               {attemptResult.passed ? (
-                <Award size={42} color="#10b981" />
+                <div 
+                  className="mascot-avatar-circle mascot-bob"
+                  style={{ width: '84px', height: '84px', border: '3px solid #10b981', boxShadow: '0 0 25px rgba(16, 185, 129, 0.5)' }}
+                >
+                  <img src="/mascot-celebrate.jpg" alt="Wolfie celebrating with trophy" />
+                </div>
               ) : (
-                <AlertCircle size={42} color="#f43f5e" />
+                <div 
+                  className="mascot-avatar-circle"
+                  style={{ width: '84px', height: '84px', border: '3px solid #f43f5e' }}
+                >
+                  <img src="/mascot-welcome.jpg" alt="Wolfie encouraging" />
+                </div>
               )}
               <div>
-                <h2 style={{ fontSize: '1.5rem', marginBottom: '0.2rem' }}>
-                  {attemptResult.passed ? 'Assessment Passed! 🎉' : 'Assessment Incomplete'}
+                <h2 style={{ fontSize: '1.65rem', marginBottom: '0.25rem', color: '#ffffff' }}>
+                  {attemptResult.passed ? 'VICTORY! Quest Complete! 🏆' : 'Almost There! Try Again! 💪'}
                 </h2>
-                <p style={{ margin: 0, color: '#cbd5e1' }}>
+                <p style={{ margin: '0 0 0.5rem', color: '#cbd5e1', fontSize: '0.95rem' }}>
                   Your Score: <strong>{attemptResult.score}%</strong> ({attemptResult.breakdown.filter((b) => b.isCorrect).length} / {attemptResult.totalPoints} correct)
                 </p>
+                {attemptResult.passed && (
+                  <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+                    <span className="badge badge-beginner" style={{ fontSize: '0.8rem', padding: '0.35rem 0.75rem' }}>
+                      <Zap size={13} /> +100 XP
+                    </span>
+                    <span className="badge" style={{ background: 'rgba(56, 189, 248, 0.2)', color: '#38bdf8', border: '1px solid #38bdf8' }}>
+                      💎 +15 Gems Earned!
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -151,9 +187,12 @@ export const QuizView: React.FC<QuizViewProps> = ({
               <button 
                 id="quiz-return-catalog-btn"
                 className="btn btn-primary" 
-                onClick={onBack}
+                onClick={() => {
+                  sounds.playPop();
+                  onBack();
+                }}
               >
-                <span>Continue Curriculum</span>
+                <span>Continue Next Quest</span>
               </button>
             </div>
           </div>
@@ -162,12 +201,12 @@ export const QuizView: React.FC<QuizViewProps> = ({
 
       {/* Error alert */}
       {errorMessage && (
-        <div style={{ padding: '0.85rem 1.25rem', background: 'rgba(244, 63, 94, 0.15)', border: '1px solid rgba(244, 63, 94, 0.4)', borderRadius: '10px', color: '#fecdd3', marginBottom: '1.25rem', fontSize: '0.875rem' }}>
+        <div style={{ padding: '0.85rem 1.25rem', background: 'rgba(244, 63, 94, 0.15)', border: '1px solid rgba(244, 63, 94, 0.4)', borderRadius: '12px', color: '#fecdd3', marginBottom: '1.25rem', fontSize: '0.875rem' }}>
           {errorMessage}
         </div>
       )}
 
-      {/* Question Cards */}
+      {/* Question Cards with Duolingo-style Chunky Options */}
       <div className="questions-list">
         {quiz.questions.map((question, index) => {
           const feedback = attemptResult?.breakdown.find((b) => b.questionId === question.id);
@@ -179,24 +218,24 @@ export const QuizView: React.FC<QuizViewProps> = ({
               className="glass-card question-card"
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-                <span style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', color: '#64748b' }}>
+                <span style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', color: '#38bdf8', letterSpacing: '0.06em' }}>
                   Question {index + 1} of {quiz.questions.length}
                 </span>
 
                 {feedback && (
                   feedback.isCorrect ? (
-                    <span style={{ color: '#10b981', display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.8rem', fontWeight: 700 }}>
+                    <span style={{ color: '#10b981', display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.825rem', fontWeight: 800 }}>
                       <CheckCircle2 size={16} /> Correct (+1)
                     </span>
                   ) : (
-                    <span style={{ color: '#f43f5e', display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.8rem', fontWeight: 700 }}>
+                    <span style={{ color: '#f43f5e', display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.825rem', fontWeight: 800 }}>
                       <XCircle size={16} /> Incorrect
                     </span>
                   )
                 )}
               </div>
 
-              <h3 style={{ fontSize: '1.15rem', color: '#ffffff', lineHeight: 1.4 }}>
+              <h3 style={{ fontSize: '1.2rem', color: '#ffffff', lineHeight: 1.45 }}>
                 {question.prompt}
               </h3>
 
@@ -227,29 +266,30 @@ export const QuizView: React.FC<QuizViewProps> = ({
                     >
                       <div 
                         style={{ 
-                          width: '20px', 
-                          height: '20px', 
+                          width: '22px', 
+                          height: '22px', 
                           borderRadius: '50%', 
-                          border: isSelected ? '5px solid var(--brand-cyan)' : '2px solid rgba(255, 255, 255, 0.25)',
-                          flexShrink: 0
+                          border: isSelected ? '6px solid var(--brand-cyan)' : '2px solid rgba(255, 255, 255, 0.3)',
+                          flexShrink: 0,
+                          transition: 'all 0.15s ease'
                         }} 
                       />
-                      <span>{option.text}</span>
+                      <span style={{ fontWeight: 600 }}>{option.text}</span>
                     </button>
                   );
                 })}
               </div>
 
-              {/* Server-Side Explanation Callout (Displayed ONLY after submission) */}
+              {/* Server-Side Explanation Callout */}
               {feedback && (
-                <div style={{ marginTop: '1.25rem', padding: '1rem', background: 'rgba(255, 255, 255, 0.03)', borderRadius: '10px', borderLeft: '3px solid var(--brand-cyan)' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.25rem' }}>
-                    <HelpCircle size={15} color="#38bdf8" />
-                    <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#38bdf8', textTransform: 'uppercase' }}>
-                      Pedagogical Explanation
+                <div style={{ marginTop: '1.25rem', padding: '1rem', background: 'rgba(255, 255, 255, 0.04)', borderRadius: '12px', borderLeft: '4px solid var(--brand-cyan)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.3rem' }}>
+                    <HelpCircle size={16} color="#38bdf8" />
+                    <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#38bdf8', textTransform: 'uppercase' }}>
+                      Wolfie's Master Explanation
                     </span>
                   </div>
-                  <p style={{ margin: 0, fontSize: '0.875rem', color: '#e2e8f0' }}>
+                  <p style={{ margin: 0, fontSize: '0.9rem', color: '#e2e8f0' }}>
                     {feedback.explanation}
                   </p>
                 </div>
@@ -259,18 +299,18 @@ export const QuizView: React.FC<QuizViewProps> = ({
         })}
       </div>
 
-      {/* Submission Bar */}
+      {/* Submission 3D Button */}
       {!attemptResult && (
         <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1.5rem' }}>
           <button
             id="quiz-submit-btn"
             className="btn btn-primary"
-            style={{ padding: '0.85rem 2rem', fontSize: '1rem' }}
+            style={{ padding: '0.9rem 2.25rem', fontSize: '1.05rem' }}
             onClick={handleSubmit}
             disabled={isSubmitting}
           >
             <Send size={18} />
-            <span>{isSubmitting ? 'Evaluating Server-Side...' : 'Submit Answers for Scoring'}</span>
+            <span>{isSubmitting ? 'Evaluating on Server...' : 'Check My Answers (+100 XP)'}</span>
           </button>
         </div>
       )}
