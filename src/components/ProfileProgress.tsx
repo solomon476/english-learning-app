@@ -162,37 +162,37 @@ export const ProfileProgress: React.FC<ProfileProgressProps> = ({
             </div>
           </div>
 
-          <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-            <div style={{ padding: '0.75rem 1.25rem', background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '12px', textAlign: 'center' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', color: '#b45309' }}>
+          <div className="profile-stats-grid">
+            <div className="profile-stat-box stat-streak">
+              <div className="stat-value-row text-gold">
                 <Flame size={18} />
-                <span style={{ fontSize: '1.25rem', fontWeight: 800 }}>{userProfile.streakDays}</span>
+                <span className="stat-number">{userProfile.streakDays}</span>
               </div>
-              <span style={{ fontSize: '0.725rem', color: '#b45309', textTransform: 'uppercase', fontWeight: 700 }}>Daily Streak</span>
+              <span className="stat-label text-gold">Daily Streak</span>
             </div>
 
-            <div style={{ padding: '0.75rem 1.25rem', background: '#f0fdf4', border: '1px solid #86efac', borderRadius: '12px', textAlign: 'center' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', color: '#007a3c' }}>
+            <div className="profile-stat-box stat-completed">
+              <div className="stat-value-row text-green">
                 <CheckCircle size={18} />
-                <span style={{ fontSize: '1.25rem', fontWeight: 800 }}>{completedLessonsCount}</span>
+                <span className="stat-number">{completedLessonsCount}</span>
               </div>
-              <span style={{ fontSize: '0.725rem', color: '#007a3c', textTransform: 'uppercase', fontWeight: 700 }}>Completed</span>
+              <span className="stat-label text-green">Completed</span>
             </div>
 
-            <div style={{ padding: '0.75rem 1.25rem', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '12px', textAlign: 'center' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', color: '#1d4ed8' }}>
+            <div className="profile-stat-box stat-score">
+              <div className="stat-value-row text-blue">
                 <Award size={18} />
-                <span style={{ fontSize: '1.25rem', fontWeight: 800 }}>{avgScore}%</span>
+                <span className="stat-number">{avgScore}%</span>
               </div>
-              <span style={{ fontSize: '0.725rem', color: '#1d4ed8', textTransform: 'uppercase', fontWeight: 700 }}>Avg Score</span>
+              <span className="stat-label text-blue">Avg Score</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* Learning Preferences */}
-      <div className="glass-card" style={{ padding: '1.75rem', marginBottom: '1.75rem', background: '#ffffff' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
+      <div className="glass-card profile-section-card">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
           <Sliders size={20} color="#00a651" />
           <h2 style={{ fontSize: '1.25rem', color: '#0f172a' }}>Learning Preferences & Adaptive Framing</h2>
         </div>
@@ -200,14 +200,13 @@ export const ProfileProgress: React.FC<ProfileProgressProps> = ({
           Set your preferred default explanation lens for lesson rendering and tutor interactions.
         </p>
 
-        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+        <div className="preference-buttons-group">
           {(['beginner', 'intermediate', 'advanced'] as ComplexityLevel[]).map((lvl) => (
             <button
               key={lvl}
               id={`pref-level-${lvl}`}
-              className={`btn ${userProfile.preferredLevel === lvl ? 'btn-primary' : 'btn-secondary'}`}
+              className={`btn pref-choice-btn ${userProfile.preferredLevel === lvl ? 'btn-primary' : 'btn-secondary'}`}
               onClick={() => onUpdateLevel(lvl)}
-              style={{ textTransform: 'capitalize' }}
             >
               <span>{lvl === 'beginner' ? '🌱 Beginner (Analogy Focus)' : lvl === 'intermediate' ? '📘 Intermediate (Standard Curriculum)' : '🔬 Advanced (First-Principles)'}</span>
             </button>
@@ -216,25 +215,24 @@ export const ProfileProgress: React.FC<ProfileProgressProps> = ({
       </div>
 
       {/* Curriculum Milestones */}
-      <div className="glass-card" style={{ padding: '1.75rem', marginBottom: '1.75rem', background: '#ffffff' }}>
+      <div className="glass-card profile-section-card">
         <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem', color: '#0f172a' }}>Enrolled Curriculum Milestones</h2>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
           {topics.map((t) => (
-            <div key={t.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.85rem 1rem', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px' }}>
-              <div>
-                <strong style={{ color: '#0f172a' }}>{t.name}</strong>
+            <div key={t.id} className="milestone-item-row">
+              <div className="milestone-topic-info">
+                <strong style={{ color: '#0f172a', display: 'block', fontSize: '0.95rem' }}>{t.name}</strong>
                 <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{t.category} · {t.lessons.length} lessons</div>
               </div>
-              <div style={{ display: 'flex', gap: '0.4rem' }}>
+              <div className="milestone-badges-wrap">
                 {t.lessons.map((les) => {
                   const isDone = progressMap[les.id]?.status === 'completed';
                   return (
                     <span 
                       key={les.id} 
-                      className={`badge ${isDone ? 'badge-beginner' : 'badge-status'}`}
-                      style={{ fontSize: '0.7rem' }}
+                      className={`badge ${isDone ? 'badge-beginner' : 'badge-status'} milestone-badge`}
                     >
-                      {les.title.substring(0, 15)}... {isDone ? '✓' : '○'}
+                      {les.title} {isDone ? '✓' : '○'}
                     </span>
                   );
                 })}

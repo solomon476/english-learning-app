@@ -57,8 +57,8 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
         </div>
 
-        {/* Primary Navigation */}
-        <nav className="nav-links" aria-label="Main Navigation">
+        {/* Primary Navigation (Desktop) */}
+        <nav className="nav-links desktop-nav" aria-label="Main Navigation">
           <button
             id="nav-catalog-btn"
             className={`nav-btn ${activeView === 'catalog' ? 'active' : ''}`}
@@ -156,10 +156,10 @@ export const Header: React.FC<HeaderProps> = ({
             {soundOn ? <Volume2 size={18} /> : <VolumeX size={18} />}
           </button>
 
-          {/* AI Tutor 3D Button */}
+          {/* AI Tutor 3D Button (Desktop only) */}
           <button
             id="header-open-tutor-btn"
-            className="btn btn-primary"
+            className="btn btn-primary desktop-tutor-btn"
             style={{ padding: '0.5rem 1.1rem', fontSize: '0.85rem' }}
             onClick={() => {
               sounds.playPop();

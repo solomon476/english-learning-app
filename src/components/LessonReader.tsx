@@ -51,28 +51,27 @@ export const LessonReader: React.FC<LessonReaderProps> = ({
   return (
     <div className="reader-wrapper">
       {/* Top Breadcrumb & Return Bar */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
+      <div className="reader-top-bar">
         <button 
           id="reader-back-btn"
-          className="btn btn-ghost" 
+          className="btn btn-ghost reader-back-button" 
           onClick={() => {
             sounds.playPop();
             onBack();
           }}
-          style={{ paddingLeft: 0 }}
         >
           <ArrowLeft size={16} />
-          <span>Back to Quests Catalog</span>
+          <span>Back to Quests</span>
         </button>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+        <div className="reader-badges-group">
           <span className={`badge badge-${lesson.level}`}>
-            {lesson.level} Level
+            {lesson.level}
           </span>
-          <span style={{ fontSize: '0.8rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-            <Clock size={13} /> {lesson.estMinutes} mins reading
+          <span className="reader-stat-item">
+            <Clock size={13} /> {lesson.estMinutes}m
           </span>
-          <span style={{ fontSize: '0.8rem', color: '#b45309', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
+          <span className="reader-xp-item">
             <Zap size={13} /> +50 XP
           </span>
         </div>
@@ -81,26 +80,26 @@ export const LessonReader: React.FC<LessonReaderProps> = ({
       <div className="reader-container">
         {/* Main Content Area */}
         <main className="reader-main" role="main">
-          <header>
-            <span style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'var(--brand-green-dark)', fontWeight: 800, letterSpacing: '0.08em' }}>
+          <header className="lesson-header-area">
+            <span className="lesson-quest-tag">
               Quest Module {lesson.position}
             </span>
-            <h1 style={{ fontSize: '2.1rem', marginTop: '0.25rem', marginBottom: '0.75rem', color: '#0f172a' }}>
+            <h1 className="lesson-main-title">
               {lesson.title}
             </h1>
-            <p style={{ fontSize: '1.05rem', color: '#475569' }}>
+            <p className="lesson-summary-text">
               {lesson.summary}
             </p>
           </header>
 
           {/* Adaptive Complexity Switcher Lens (FR-08) */}
-          <div className="glass-card" style={{ padding: '0.85rem 1.25rem', background: '#ffffff' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-              <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#0f172a', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+          <div className="glass-card reader-lens-card">
+            <div className="lens-header-row">
+              <span className="lens-title">
                 Wolfie's Adaptive Lens:
               </span>
-              <span style={{ fontSize: '0.75rem', color: '#64748b' }}>
-                Toggle explanation depth on the fly
+              <span className="lens-subtitle">
+                Toggle explanation depth
               </span>
             </div>
 
@@ -137,38 +136,29 @@ export const LessonReader: React.FC<LessonReaderProps> = ({
 
           {/* Section Tabs */}
           {lesson.sections.length > 1 && (
-            <div style={{ display: 'flex', gap: '0.5rem', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '0.5rem' }}>
+            <div className="reader-section-tabs">
               {lesson.sections.map((sec, idx) => (
                 <button
                   key={sec.id}
-                  className={`btn btn-ghost ${activeSectionIndex === idx ? 'active' : ''}`}
-                  style={{
-                    fontSize: '0.85rem',
-                    fontWeight: 700,
-                    color: activeSectionIndex === idx ? '#007a3c' : 'var(--text-secondary)',
-                    borderBottom: activeSectionIndex === idx ? '2px solid #00a651' : 'none',
-                    borderRadius: 0,
-                    padding: '0.4rem 0.75rem'
-                  }}
+                  className={`reader-section-tab-btn ${activeSectionIndex === idx ? 'active' : ''}`}
                   onClick={() => {
                     sounds.playPop();
                     setActiveSectionIndex(idx);
                   }}
                 >
-                  Section {idx + 1}: {sec.heading.substring(0, 24)}...
+                  Section {idx + 1}: {sec.heading}
                 </button>
               ))}
             </div>
           )}
 
           {/* Section Body */}
-          <article className="glass-card" style={{ padding: '2rem', background: '#ffffff' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.25rem' }}>
-              <h2 style={{ color: '#0f172a' }}>{activeSection.heading}</h2>
+          <article className="glass-card reader-article-card">
+            <div className="section-header-row">
+              <h2 className="section-title-text">{activeSection.heading}</h2>
               <button
                 id="section-ask-tutor-btn"
-                className="btn btn-secondary"
-                style={{ fontSize: '0.8rem', padding: '0.45rem 0.8rem' }}
+                className="btn btn-secondary section-tutor-btn"
                 onClick={() => {
                   sounds.playPop();
                   onAskTutor(activeSection.heading);
@@ -201,17 +191,16 @@ export const LessonReader: React.FC<LessonReaderProps> = ({
           </article>
 
           {/* Assessment Call-To-Action with 3D Pure Green Button */}
-          <div className="glass-card" style={{ padding: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1.25rem', background: 'linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%)', border: '1px solid #86efac' }}>
+          <div className="glass-card lesson-assessment-card">
             <div>
-              <h3 style={{ fontSize: '1.35rem', marginBottom: '0.25rem', color: '#0f172a' }}>Ready to test your comprehension? 🎯</h3>
-              <p style={{ margin: 0, fontSize: '0.9rem', color: '#475569' }}>
+              <h3 style={{ fontSize: '1.25rem', marginBottom: '0.25rem', color: '#0f172a' }}>Ready to test your comprehension? 🎯</h3>
+              <p style={{ margin: 0, fontSize: '0.875rem', color: '#475569' }}>
                 Complete the server-validated practice drill to cement these ideas, earn <strong>+100 XP</strong>, and win <strong>15 Gems 💎</strong>!
               </p>
             </div>
             <button
               id="lesson-start-quiz-btn"
-              className="btn btn-primary"
-              style={{ padding: '0.85rem 1.75rem', fontSize: '1rem' }}
+              className="btn btn-primary lesson-assessment-btn"
               onClick={() => {
                 sounds.playPop();
                 onStartQuiz();

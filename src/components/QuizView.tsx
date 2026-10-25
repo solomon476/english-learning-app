@@ -96,26 +96,26 @@ export const QuizView: React.FC<QuizViewProps> = ({
       </button>
 
       {/* Quiz Header with Wolfie Mascot Guide */}
-      <div className="glass-card" style={{ padding: '1.75rem', marginBottom: '1.5rem', background: '#ffffff' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div className="mascot-avatar-circle" style={{ width: '60px', height: '60px', border: '3px solid #00a651' }}>
+      <div className="glass-card quiz-header-card">
+        <div className="quiz-header-inner">
+          <div className="quiz-header-wolfie">
+            <div className="mascot-avatar-circle quiz-mascot-avatar">
               <img src="/mascot-tutor.jpg" alt="Wolfie with glasses" />
             </div>
-            <div>
-              <span style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'var(--brand-green-dark)', fontWeight: 800, letterSpacing: '0.08em' }}>
+            <div className="quiz-header-titles">
+              <span className="quiz-header-tag">
                 Wolfie's Practice Drill
               </span>
-              <h1 style={{ fontSize: '1.75rem', marginTop: '0.15rem', marginBottom: '0.2rem', color: '#0f172a' }}>
+              <h1 className="quiz-header-h1">
                 {quiz.title}
               </h1>
-              <p style={{ margin: 0, fontSize: '0.85rem', color: '#475569' }}>
+              <p className="quiz-header-desc">
                 Pass threshold: {quiz.passThresholdPercent}% · Evaluated server-side · Earn <strong>+100 XP</strong> & <strong>15 Gems 💎</strong>
               </p>
             </div>
           </div>
 
-          <div style={{ padding: '0.5rem 1rem', background: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+          <div className="quiz-question-badge">
             <span style={{ fontSize: '0.8rem', color: '#64748b' }}>Questions: </span>
             <strong style={{ color: '#0f172a' }}>{quiz.questions.length}</strong>
           </div>
@@ -297,11 +297,10 @@ export const QuizView: React.FC<QuizViewProps> = ({
 
       {/* Submission 3D Button */}
       {!attemptResult && (
-        <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1.5rem' }}>
+        <div className="quiz-submit-box">
           <button
             id="quiz-submit-btn"
-            className="btn btn-primary"
-            style={{ padding: '0.9rem 2.25rem', fontSize: '1.05rem' }}
+            className="btn btn-primary quiz-submit-btn"
             onClick={handleSubmit}
             disabled={isSubmitting}
           >

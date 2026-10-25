@@ -10,6 +10,7 @@ import { ProfileProgress } from './components/ProfileProgress';
 import { AdminWorkflow } from './components/AdminWorkflow';
 import { AITutorDrawer } from './components/AITutorDrawer';
 import { BlueprintDrawer } from './components/BlueprintDrawer';
+import { MobileNav } from './components/MobileNav';
 import { sounds } from './utils/soundEffects';
 
 export function App() {
@@ -191,11 +192,11 @@ export function App() {
         )}
       </main>
 
-      {/* Floating Action Button for AI Tutor with Wolfie Mascot */}
+      {/* Floating Action Button for AI Tutor with Wolfie Mascot (Desktop only, mobile uses bottom nav) */}
       {!isTutorOpen && (
         <button
           id="floating-tutor-fab"
-          className="tutor-launcher-fab mascot-bob"
+          className="tutor-launcher-fab desktop-only-fab mascot-bob"
           onClick={() => {
             sounds.playPop();
             setIsTutorOpen(true);
@@ -212,6 +213,20 @@ export function App() {
           </div>
         </button>
       )}
+
+      {/* Mobile Bottom Navigation Bar */}
+      <MobileNav
+        activeView={activeView}
+        onNavigate={(view) => {
+          if (view === 'blueprint') {
+            setIsBlueprintOpen(true);
+          } else {
+            setActiveView(view);
+          }
+        }}
+        onOpenTutor={() => setIsTutorOpen(true)}
+        hasActiveLesson={!!currentLesson}
+      />
 
       {/* In-Context Grounded AI Tutor Drawer */}
       <AITutorDrawer

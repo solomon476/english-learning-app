@@ -70,8 +70,8 @@ export const TopicCatalog: React.FC<TopicCatalogProps> = ({
   return (
     <div className="catalog-wrapper">
       {/* Mascot Hero Card with Wolfie */}
-      <section className="hero-card" aria-labelledby="hero-heading" style={{ padding: '2.5rem' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: '2rem', alignItems: 'center' }}>
+      <section className="hero-card" aria-labelledby="hero-heading">
+        <div className="hero-responsive-grid">
           <div className="hero-content">
             <div className="hero-tag" style={{ background: '#f0fdf4', borderColor: '#86efac' }}>
               <Sparkles size={14} color="#00a651" />
@@ -88,10 +88,10 @@ export const TopicCatalog: React.FC<TopicCatalogProps> = ({
               Earn XP, test yourself on server-scored drills, and get personalized help from Wolfie, your grounded AI tutor!
             </p>
 
-            <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+            <div className="hero-cta-buttons">
               <button 
                 id="hero-start-learning-btn"
-                className="btn btn-primary"
+                className="btn btn-primary hero-btn-main"
                 onClick={() => {
                   sounds.playPop();
                   if (topics[0]?.lessons[0]) {
@@ -105,7 +105,7 @@ export const TopicCatalog: React.FC<TopicCatalogProps> = ({
               
               <button 
                 id="hero-ask-tutor-btn"
-                className="btn btn-secondary"
+                className="btn btn-secondary hero-btn-sub"
                 onClick={() => {
                   sounds.playPop();
                   onOpenTutor();
@@ -123,27 +123,24 @@ export const TopicCatalog: React.FC<TopicCatalogProps> = ({
               </div>
               <div className="hero-feature-pill">
                 <span>📚</span>
-                <span>Verified Source Grounding</span>
+                <span>Verified Sources</span>
               </div>
               <div className="hero-feature-pill">
                 <span>✨</span>
-                <span>Adaptive Analogy Engine</span>
+                <span>Adaptive Analogies</span>
               </div>
             </div>
           </div>
 
           {/* Wolfie Animated Mascot Showcase */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
-            <div className="mascot-speech-bubble" style={{ marginBottom: '1rem', maxWidth: '240px', fontSize: '0.85rem' }}>
-              "Awoo! 🐾 Ready to level up your English & critical thinking skills today?"
+          <div className="hero-mascot-showcase">
+            <div className="mascot-speech-bubble hero-speech-bubble">
+              "Awoo! 🐾 Ready to level up your skills today?"
             </div>
-            <div 
-              className="mascot-avatar-circle mascot-bob"
-              style={{ width: '180px', height: '180px', border: '4px solid #00a651', boxShadow: '0 0 25px rgba(0, 166, 81, 0.25)', background: '#ffffff' }}
-            >
+            <div className="mascot-avatar-circle hero-mascot-avatar mascot-bob">
               <img src="/mascot-welcome.jpg" alt="Wolfie the Solian Wolf Mascot" />
             </div>
-            <span style={{ marginTop: '0.65rem', fontWeight: 800, fontSize: '0.95rem', color: '#0f172a' }}>
+            <span className="hero-mascot-label">
               Wolfie · Your Study Companion
             </span>
           </div>
@@ -153,25 +150,25 @@ export const TopicCatalog: React.FC<TopicCatalogProps> = ({
       {/* Active Resume Card */}
       {inProgressLesson && (
         <aside className="resume-banner" aria-label="Resume Learning">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{ width: '48px', height: '48px', borderRadius: '12px', overflow: 'hidden', border: '2px solid #00a651', background: '#ffffff' }}>
+          <div className="resume-banner-info">
+            <div className="resume-banner-thumb">
               <img src="/mascot-tutor.jpg" alt="Wolfie" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
             <div>
               <span style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: '#007a3c', fontWeight: 800, letterSpacing: '0.05em' }}>
                 Quest In Progress
               </span>
-              <h4 style={{ margin: '0.15rem 0', color: '#0f172a' }}>
+              <h4 style={{ margin: '0.15rem 0', color: '#0f172a', fontSize: '1rem' }}>
                 {inProgressLesson.title}
               </h4>
-              <span style={{ fontSize: '0.825rem', color: '#475569' }}>
+              <span style={{ fontSize: '0.8rem', color: '#475569' }}>
                 ⏱️ {inProgressLesson.estMinutes} mins remaining · Earn +50 XP
               </span>
             </div>
           </div>
           <button 
             id="resume-lesson-btn"
-            className="btn btn-accent"
+            className="btn btn-accent resume-banner-btn"
             onClick={() => {
               sounds.playPop();
               onSelectLesson(inProgressLesson!);
@@ -184,22 +181,14 @@ export const TopicCatalog: React.FC<TopicCatalogProps> = ({
       )}
 
       {/* Search and Category Filters */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.75rem' }}>
-        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+      <div className="catalog-filters-bar">
+        <div className="category-scroll-container">
           {categories.map((cat) => {
             const isSelected = selectedCategory === cat;
             return (
               <button
                 key={cat}
-                className={`btn btn-secondary ${isSelected ? 'active' : ''}`}
-                style={{
-                  fontSize: '0.825rem',
-                  padding: '0.5rem 1rem',
-                  background: isSelected ? '#f0fdf4' : '#ffffff',
-                  borderColor: isSelected ? '#00a651' : '#cbd5e1',
-                  color: isSelected ? '#007a3c' : '#475569',
-                  fontWeight: isSelected ? 800 : 600
-                }}
+                className={`btn category-pill ${isSelected ? 'active' : ''}`}
                 onClick={() => {
                   sounds.playPop();
                   setSelectedCategory(cat);
@@ -211,24 +200,15 @@ export const TopicCatalog: React.FC<TopicCatalogProps> = ({
           })}
         </div>
 
-        <div style={{ position: 'relative', minWidth: '260px' }}>
-          <Search size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#64748b' }} />
+        <div className="search-input-box">
+          <Search size={16} className="search-icon" />
           <input
             id="topic-search-input"
             type="text"
             placeholder="Search topics, lessons, concepts..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            style={{
-              width: '100%',
-              padding: '0.6rem 0.85rem 0.6rem 2.25rem',
-              background: '#ffffff',
-              border: '1px solid #cbd5e1',
-              borderRadius: '12px',
-              color: '#0f172a',
-              fontSize: '0.85rem',
-              outline: 'none'
-            }}
+            className="search-text-field"
           />
         </div>
       </div>
