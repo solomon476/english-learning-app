@@ -191,7 +191,7 @@ If news media airs days of sensational coverage following a commercial airplane 
             id: 'sec-ps-1',
             position: 1,
             heading: 'Why We Chop Files: Circuit vs. Packet Switching',
-            bodyStandard: `Early telephone networks used "circuit switching": when Alice called Bob, physical copper wires clicked together, reserving a dedicated path. If nobody spoke, the wire sat completely idle.
+            bodyStandard: `Early telephone networks used "circuit switching": when one phone connected to another, physical copper wires clicked together, reserving a dedicated path. If nobody spoke, the wire sat completely idle.
 
 The modern internet uses "packet switching". Every photograph, song, or webpage is sliced into tiny chunks called packets (usually up to 1,500 bytes). Each packet receives a header with the sender IP, receiver IP, and sequence number. Packets travel independently across multiple routers and take different paths before the recipient reassembles them.`,
             bodyAnalogy: `Imagine mailing a 1,000-page book to a friend. Instead of renting a private freight truck, you tear out each page, put it in a separate stamped envelope with page numbers ("Page 14 of 1,000"), and drop them in normal mailboxes. Some envelopes travel by train, some by air, but your friend puts them in order when they arrive.`,

@@ -139,8 +139,8 @@ export function App() {
       {/* Main Dynamic View Content */}
       <main className="main-content" role="main">
         {isLoading ? (
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '50vh', color: '#94a3b8' }}>
-            <Sparkles size={24} className="float-animation" color="#38bdf8" />
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '50vh', color: '#64748b' }}>
+            <Sparkles size={24} className="float-animation" color="#00a651" />
             <span style={{ marginLeft: '0.75rem', fontSize: '1.1rem' }}>Loading Solian Wolves Curriculum...</span>
           </div>
         ) : (
@@ -208,7 +208,7 @@ export function App() {
           </div>
           <div style={{ textAlign: 'left', lineHeight: 1.15 }}>
             <span style={{ display: 'block', fontSize: '0.9rem', fontWeight: 800 }}>Ask Wolfie 🐾</span>
-            <span style={{ fontSize: '0.7rem', color: '#e0f2fe' }}>AI Study Buddy</span>
+            <span style={{ fontSize: '0.7rem', color: '#dcfce7' }}>AI Study Buddy</span>
           </div>
         </button>
       )}

@@ -40,7 +40,7 @@ export const BlueprintDrawer: React.FC<BlueprintDrawerProps> = ({ isOpen, onClos
   ];
 
   return (
-    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0, 0, 0, 0.82)', backdropFilter: 'blur(8px)', zIndex: 110, display: 'flex', justifyContent: 'flex-end' }}>
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(15, 23, 42, 0.6)', backdropFilter: 'blur(8px)', zIndex: 110, display: 'flex', justifyContent: 'flex-end' }}>
       <div 
         className="glass-card" 
         style={{ 
@@ -50,7 +50,8 @@ export const BlueprintDrawer: React.FC<BlueprintDrawerProps> = ({ isOpen, onClos
           borderRadius: 0, 
           padding: '2rem', 
           overflowY: 'auto',
-          borderLeft: '1px solid rgba(56, 189, 248, 0.3)',
+          background: '#ffffff',
+          borderLeft: '1px solid #cbd5e1',
           display: 'flex',
           flexDirection: 'column',
           gap: '1.5rem'
@@ -58,19 +59,19 @@ export const BlueprintDrawer: React.FC<BlueprintDrawerProps> = ({ isOpen, onClos
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
-            <span style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'var(--brand-cyan)', fontWeight: 700, letterSpacing: '0.08em' }}>
+            <span style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: '#007a3c', fontWeight: 700, letterSpacing: '0.08em' }}>
               Internal Specification
             </span>
-            <h2 style={{ fontSize: '1.5rem', margin: '0.2rem 0' }}>Solian Wolves Blueprint V1.0</h2>
-            <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>Planning Baseline: 24 October 2026</span>
+            <h2 style={{ fontSize: '1.5rem', margin: '0.2rem 0', color: '#0f172a' }}>Solian Wolves Blueprint V1.0</h2>
+            <span style={{ fontSize: '0.8rem', color: '#64748b' }}>Planning Baseline: 24 October 2026</span>
           </div>
           <button className="btn btn-secondary" onClick={onClose}>Close Spec</button>
         </div>
 
         {/* Executive Verification Summary */}
-        <div style={{ padding: '1rem', background: 'rgba(56, 189, 248, 0.08)', border: '1px solid rgba(56, 189, 248, 0.25)', borderRadius: '12px' }}>
-          <h4 style={{ color: '#38bdf8', marginBottom: '0.35rem' }}>MVP Implementation Status: Complete & Verified</h4>
-          <p style={{ margin: 0, fontSize: '0.85rem', color: '#e2e8f0' }}>
+        <div style={{ padding: '1rem', background: '#f0fdf4', border: '1px solid #86efac', borderRadius: '12px' }}>
+          <h4 style={{ color: '#007a3c', marginBottom: '0.35rem' }}>MVP Implementation Status: Complete & Verified</h4>
+          <p style={{ margin: 0, fontSize: '0.85rem', color: '#1e293b' }}>
             All core requirements from Section 1 through Section 16 have been implemented into this responsive web application:
             modular monolith architecture, server-evaluated quizzes, multi-lens lessons, grounded AI tutor, and Kenya DPA privacy controls.
           </p>
@@ -78,15 +79,15 @@ export const BlueprintDrawer: React.FC<BlueprintDrawerProps> = ({ isOpen, onClos
 
         {/* PRD Checklist */}
         <div>
-          <h3 style={{ fontSize: '1.15rem', marginBottom: '0.75rem' }}>PRD Functional Requirements Register</h3>
+          <h3 style={{ fontSize: '1.15rem', marginBottom: '0.75rem', color: '#0f172a' }}>PRD Functional Requirements Register</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
             {requirements.map((req) => (
               <div 
                 key={req.id} 
                 style={{ 
                   padding: '0.75rem 1rem', 
-                  background: 'rgba(255, 255, 255, 0.03)', 
-                  border: '1px solid var(--border-subtle)', 
+                  background: '#f8fafc', 
+                  border: '1px solid #e2e8f0', 
                   borderRadius: '10px',
                   display: 'flex',
                   justifyContent: 'space-between',
@@ -96,15 +97,15 @@ export const BlueprintDrawer: React.FC<BlueprintDrawerProps> = ({ isOpen, onClos
               >
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <code style={{ color: '#38bdf8', fontWeight: 700 }}>{req.id}</code>
-                    <strong style={{ color: '#ffffff', fontSize: '0.9rem' }}>{req.title}</strong>
+                    <code style={{ color: '#007a3c', fontWeight: 700 }}>{req.id}</code>
+                    <strong style={{ color: '#0f172a', fontSize: '0.9rem' }}>{req.title}</strong>
                     <span className="badge badge-status" style={{ fontSize: '0.65rem' }}>{req.priority}</span>
                   </div>
-                  <p style={{ margin: '0.25rem 0 0', fontSize: '0.8rem', color: '#94a3b8' }}>
+                  <p style={{ margin: '0.25rem 0 0', fontSize: '0.8rem', color: '#64748b' }}>
                     {req.detail}
                   </p>
                 </div>
-                <span style={{ color: req.status === 'Implemented' ? '#10b981' : '#f59e0b', fontSize: '0.75rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.25rem', whiteSpace: 'nowrap' }}>
+                <span style={{ color: req.status === 'Implemented' ? '#00a651' : '#b45309', fontSize: '0.75rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.25rem', whiteSpace: 'nowrap' }}>
                   <CheckCircle2 size={14} /> {req.status}
                 </span>
               </div>
@@ -114,24 +115,24 @@ export const BlueprintDrawer: React.FC<BlueprintDrawerProps> = ({ isOpen, onClos
 
         {/* 12-Issue Milestone Ticket Tracker */}
         <div>
-          <h3 style={{ fontSize: '1.15rem', marginBottom: '0.75rem' }}>30-Day Execution Issue Sequence</h3>
+          <h3 style={{ fontSize: '1.15rem', marginBottom: '0.75rem', color: '#0f172a' }}>30-Day Execution Issue Sequence</h3>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.5rem' }}>
             {tickets.map((t) => (
               <div 
                 key={t.id} 
                 style={{ 
                   padding: '0.6rem 0.85rem', 
-                  background: 'rgba(16, 185, 129, 0.08)', 
-                  border: '1px solid rgba(16, 185, 129, 0.25)', 
+                  background: '#f0fdf4', 
+                  border: '1px solid #86efac', 
                   borderRadius: '8px',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.5rem'
                 }}
               >
-                <CheckCircle2 size={15} color="#10b981" />
+                <CheckCircle2 size={15} color="#00a651" />
                 <div style={{ fontSize: '0.75rem' }}>
-                  <strong style={{ color: '#ffffff' }}>{t.id}:</strong> <span style={{ color: '#cbd5e1' }}>{t.name}</span>
+                  <strong style={{ color: '#0f172a' }}>{t.id}:</strong> <span style={{ color: '#334155' }}>{t.name}</span>
                 </div>
               </div>
             ))}

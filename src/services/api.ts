@@ -23,14 +23,14 @@ const STORAGE_KEYS = {
 
 // Initial default user profile (Solian Wolves learner)
 const DEFAULT_PROFILE: UserProfile = {
-  id: 'usr-default-01',
-  displayName: 'Kiprono Cheruiyot',
+  id: 'usr-learner-01',
+  displayName: 'Learner',
   email: 'learner@solianwolves.org',
   preferredLevel: 'beginner',
-  streakDays: 4,
+  streakDays: 1,
   lastActiveDate: new Date().toISOString(),
   totalCompletedLessons: 0,
-  tutorCreditsUsed: 3,
+  tutorCreditsUsed: 0,
   tutorCreditsMax: 20
 };
 
@@ -159,13 +159,25 @@ export class ApiService {
     const stored = localStorage.getItem(STORAGE_KEYS.PROFILE);
     if (stored) {
       try {
-        return JSON.parse(stored);
+        const parsed: UserProfile = JSON.parse(stored);
+        if (parsed.displayName === 'Kiprono Cheruiyot') {
+          parsed.displayName = 'Learner';
+          localStorage.setItem(STORAGE_KEYS.PROFILE, JSON.stringify(parsed));
+        }
+        return parsed;
       } catch {
         // fallback
       }
     }
     localStorage.setItem(STORAGE_KEYS.PROFILE, JSON.stringify(DEFAULT_PROFILE));
     return DEFAULT_PROFILE;
+  }
+
+  public static async updateUserProfile(updates: Partial<UserProfile>): Promise<UserProfile> {
+    const profile = await this.getUserProfile();
+    const updated = { ...profile, ...updates };
+    localStorage.setItem(STORAGE_KEYS.PROFILE, JSON.stringify(updated));
+    return updated;
   }
 
   public static async updateUserLevel(level: ComplexityLevel): Promise<UserProfile> {

@@ -7,7 +7,6 @@ import {
   CheckCircle, 
   Clock, 
   ChevronRight, 
-  ShieldCheck, 
   Target, 
   Search,
   Zap
@@ -70,13 +69,13 @@ export const TopicCatalog: React.FC<TopicCatalogProps> = ({
 
   return (
     <div className="catalog-wrapper">
-      {/* Cartoon Mascot Hero Card with Wolfie */}
+      {/* Mascot Hero Card with Wolfie */}
       <section className="hero-card" aria-labelledby="hero-heading" style={{ padding: '2.5rem' }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: '2rem', alignItems: 'center' }}>
           <div className="hero-content">
-            <div className="hero-tag" style={{ background: 'rgba(56, 189, 248, 0.15)', borderColor: 'rgba(56, 189, 248, 0.4)' }}>
-              <Sparkles size={14} color="#38bdf8" />
-              <span style={{ color: '#38bdf8' }}>Gamified Learning · Meet Wolfie! 🐾</span>
+            <div className="hero-tag" style={{ background: '#f0fdf4', borderColor: '#86efac' }}>
+              <Sparkles size={14} color="#00a651" />
+              <span style={{ color: '#007a3c' }}>Gamified Learning · Meet Wolfie! 🐾</span>
             </div>
             
             <h1 id="hero-heading" className="hero-title">
@@ -112,7 +111,7 @@ export const TopicCatalog: React.FC<TopicCatalogProps> = ({
                   onOpenTutor();
                 }}
               >
-                <Brain size={18} color="#38bdf8" />
+                <Brain size={18} color="#00a651" />
                 <span>Chat with Wolfie</span>
               </button>
             </div>
@@ -140,32 +139,32 @@ export const TopicCatalog: React.FC<TopicCatalogProps> = ({
             </div>
             <div 
               className="mascot-avatar-circle mascot-bob"
-              style={{ width: '180px', height: '180px', border: '4px solid #38bdf8', boxShadow: '0 0 30px rgba(56, 189, 248, 0.45)' }}
+              style={{ width: '180px', height: '180px', border: '4px solid #00a651', boxShadow: '0 0 25px rgba(0, 166, 81, 0.25)', background: '#ffffff' }}
             >
               <img src="/mascot-welcome.jpg" alt="Wolfie the Solian Wolf Mascot" />
             </div>
-            <span style={{ marginTop: '0.65rem', fontWeight: 800, fontSize: '0.95rem', color: '#f8fafc' }}>
+            <span style={{ marginTop: '0.65rem', fontWeight: 800, fontSize: '0.95rem', color: '#0f172a' }}>
               Wolfie · Your Study Companion
             </span>
           </div>
         </div>
       </section>
 
-      {/* Active Resume Card (FR-04) */}
+      {/* Active Resume Card */}
       {inProgressLesson && (
         <aside className="resume-banner" aria-label="Resume Learning">
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{ width: '48px', height: '48px', borderRadius: '12px', overflow: 'hidden', border: '2px solid #38bdf8' }}>
+            <div style={{ width: '48px', height: '48px', borderRadius: '12px', overflow: 'hidden', border: '2px solid #00a651', background: '#ffffff' }}>
               <img src="/mascot-tutor.jpg" alt="Wolfie" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
             <div>
-              <span style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: '#38bdf8', fontWeight: 800, letterSpacing: '0.05em' }}>
+              <span style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: '#007a3c', fontWeight: 800, letterSpacing: '0.05em' }}>
                 Quest In Progress
               </span>
-              <h4 style={{ margin: '0.15rem 0', color: '#ffffff' }}>
+              <h4 style={{ margin: '0.15rem 0', color: '#0f172a' }}>
                 {inProgressLesson.title}
               </h4>
-              <span style={{ fontSize: '0.825rem', color: '#94a3b8' }}>
+              <span style={{ fontSize: '0.825rem', color: '#475569' }}>
                 ⏱️ {inProgressLesson.estMinutes} mins remaining · Earn +50 XP
               </span>
             </div>
@@ -187,25 +186,29 @@ export const TopicCatalog: React.FC<TopicCatalogProps> = ({
       {/* Search and Category Filters */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.75rem' }}>
         <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              className={`btn btn-secondary ${selectedCategory === cat ? 'active' : ''}`}
-              style={{
-                fontSize: '0.825rem',
-                padding: '0.5rem 1rem',
-                background: selectedCategory === cat ? 'rgba(56, 189, 248, 0.18)' : 'rgba(255, 255, 255, 0.05)',
-                borderColor: selectedCategory === cat ? 'var(--brand-cyan)' : 'var(--border-subtle)',
-                color: selectedCategory === cat ? 'var(--brand-cyan)' : 'var(--text-secondary)'
-              }}
-              onClick={() => {
-                sounds.playPop();
-                setSelectedCategory(cat);
-              }}
-            >
-              {cat}
-            </button>
-          ))}
+          {categories.map((cat) => {
+            const isSelected = selectedCategory === cat;
+            return (
+              <button
+                key={cat}
+                className={`btn btn-secondary ${isSelected ? 'active' : ''}`}
+                style={{
+                  fontSize: '0.825rem',
+                  padding: '0.5rem 1rem',
+                  background: isSelected ? '#f0fdf4' : '#ffffff',
+                  borderColor: isSelected ? '#00a651' : '#cbd5e1',
+                  color: isSelected ? '#007a3c' : '#475569',
+                  fontWeight: isSelected ? 800 : 600
+                }}
+                onClick={() => {
+                  sounds.playPop();
+                  setSelectedCategory(cat);
+                }}
+              >
+                {cat}
+              </button>
+            );
+          })}
         </div>
 
         <div style={{ position: 'relative', minWidth: '260px' }}>
@@ -219,10 +222,10 @@ export const TopicCatalog: React.FC<TopicCatalogProps> = ({
             style={{
               width: '100%',
               padding: '0.6rem 0.85rem 0.6rem 2.25rem',
-              background: 'rgba(255, 255, 255, 0.05)',
-              border: '1px solid var(--border-subtle)',
+              background: '#ffffff',
+              border: '1px solid #cbd5e1',
               borderRadius: '12px',
-              color: '#ffffff',
+              color: '#0f172a',
               fontSize: '0.85rem',
               outline: 'none'
             }}
@@ -236,7 +239,7 @@ export const TopicCatalog: React.FC<TopicCatalogProps> = ({
           <article key={topic.id} className="glass-card topic-card" role="listitem">
             <div>
               <div className="topic-header">
-                <div className="topic-icon-box" style={{ background: 'rgba(56, 189, 248, 0.15)', borderColor: 'rgba(56, 189, 248, 0.3)' }}>
+                <div className="topic-icon-box" style={{ background: '#f0fdf4', borderColor: '#86efac', color: '#00a651' }}>
                   {getTopicIcon(topic.iconName)}
                 </div>
                 <span className="badge badge-status" style={{ fontWeight: 800 }}>
@@ -244,8 +247,8 @@ export const TopicCatalog: React.FC<TopicCatalogProps> = ({
                 </span>
               </div>
 
-              <h3>{topic.name}</h3>
-              <p style={{ marginTop: '0.45rem', fontSize: '0.875rem' }}>
+              <h3 style={{ color: '#0f172a' }}>{topic.name}</h3>
+              <p style={{ marginTop: '0.45rem', fontSize: '0.875rem', color: '#475569' }}>
                 {topic.description}
               </p>
             </div>
@@ -273,26 +276,26 @@ export const TopicCatalog: React.FC<TopicCatalogProps> = ({
                   >
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-                        <span style={{ fontSize: '0.9rem', fontWeight: 700, color: '#f1f5f9' }}>
+                        <span style={{ fontSize: '0.9rem', fontWeight: 700, color: '#0f172a' }}>
                           {lesson.title}
                         </span>
                         {isCompleted && (
-                          <CheckCircle size={15} color="#10b981" />
+                          <CheckCircle size={15} color="#00a651" />
                         )}
                       </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.75rem', color: '#94a3b8' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.75rem', color: '#64748b' }}>
                         <span className={`badge badge-${lesson.level}`}>
                           {lesson.level}
                         </span>
                         <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                           <Clock size={12} /> {lesson.estMinutes}m
                         </span>
-                        <span style={{ color: '#fcd34d', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.15rem' }}>
+                        <span style={{ color: '#b45309', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.15rem' }}>
                           <Zap size={12} /> +50 XP
                         </span>
                       </div>
                     </div>
-                    <ChevronRight size={18} color="#64748b" />
+                    <ChevronRight size={18} color="#94a3b8" />
                   </div>
                 );
               })}

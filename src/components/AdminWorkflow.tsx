@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Shield, Check, Globe, Archive, FileEdit, Clock } from 'lucide-react';
+import { Shield, Globe, Archive, Clock } from 'lucide-react';
 import { Topic, PublishingStatus } from '../types';
 import { ApiService } from '../services/api';
 
@@ -27,17 +27,17 @@ export const AdminWorkflow: React.FC<AdminWorkflowProps> = ({
   return (
     <div className="admin-wrapper" style={{ maxWidth: '1000px', margin: '0 auto' }}>
       {/* Admin Header */}
-      <div className="glass-card" style={{ padding: '1.75rem', marginBottom: '1.5rem' }}>
+      <div className="glass-card" style={{ padding: '1.75rem', marginBottom: '1.5rem', background: '#ffffff' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: 'rgba(99, 102, 241, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Shield size={24} color="#818cf8" />
+          <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: '#f0fdf4', border: '1px solid #86efac', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Shield size={24} color="#00a651" />
           </div>
           <div>
-            <span style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: '#818cf8', fontWeight: 700, letterSpacing: '0.08em' }}>
+            <span style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: '#007a3c', fontWeight: 700, letterSpacing: '0.08em' }}>
               Content Administration & Provenance (FR-10)
             </span>
-            <h1 style={{ fontSize: '1.75rem', margin: '0.15rem 0' }}>Editorial Publishing Pipeline</h1>
-            <p style={{ margin: 0, fontSize: '0.875rem' }}>
+            <h1 style={{ fontSize: '1.75rem', margin: '0.15rem 0', color: '#0f172a' }}>Editorial Publishing Pipeline</h1>
+            <p style={{ margin: 0, fontSize: '0.875rem', color: '#475569' }}>
               Lifecycle: <code>draft</code> ➔ <code>review</code> ➔ <code>published</code> ➔ <code>archived</code>
             </p>
           </div>
@@ -45,7 +45,7 @@ export const AdminWorkflow: React.FC<AdminWorkflowProps> = ({
       </div>
 
       {actionSuccess && (
-        <div style={{ padding: '0.85rem 1.25rem', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.4)', borderRadius: '10px', color: '#6ee7b7', marginBottom: '1.25rem', fontSize: '0.875rem' }}>
+        <div style={{ padding: '0.85rem 1.25rem', background: '#f0fdf4', border: '1px solid #86efac', borderRadius: '10px', color: '#007a3c', marginBottom: '1.25rem', fontSize: '0.875rem' }}>
           {actionSuccess}
         </div>
       )}
@@ -66,14 +66,14 @@ export const AdminWorkflow: React.FC<AdminWorkflowProps> = ({
 
       {/* Selected Topic Lessons Table */}
       {selectedTopic && (
-        <div className="glass-card" style={{ padding: '1.5rem', overflowX: 'auto' }}>
-          <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>
+        <div className="glass-card" style={{ padding: '1.5rem', overflowX: 'auto', background: '#ffffff' }}>
+          <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem', color: '#0f172a' }}>
             Curriculum Registry: {selectedTopic.name}
           </h2>
 
           <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.875rem' }}>
             <thead>
-              <tr style={{ borderBottom: '1px solid var(--border-subtle)', color: '#94a3b8' }}>
+              <tr style={{ borderBottom: '1px solid #e2e8f0', color: '#64748b' }}>
                 <th style={{ padding: '0.75rem 0.5rem' }}>Lesson Title</th>
                 <th style={{ padding: '0.75rem 0.5rem' }}>Level</th>
                 <th style={{ padding: '0.75rem 0.5rem' }}>Version</th>
@@ -84,14 +84,14 @@ export const AdminWorkflow: React.FC<AdminWorkflowProps> = ({
             </thead>
             <tbody>
               {selectedTopic.lessons.map((lesson) => (
-                <tr key={lesson.id} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.04)' }}>
-                  <td style={{ padding: '1rem 0.5rem', fontWeight: 600, color: '#f1f5f9' }}>
+                <tr key={lesson.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                  <td style={{ padding: '1rem 0.5rem', fontWeight: 600, color: '#0f172a' }}>
                     {lesson.title}
                   </td>
                   <td style={{ padding: '1rem 0.5rem' }}>
                     <span className={`badge badge-${lesson.level}`}>{lesson.level}</span>
                   </td>
-                  <td style={{ padding: '1rem 0.5rem', color: '#94a3b8' }}>
+                  <td style={{ padding: '1rem 0.5rem', color: '#64748b' }}>
                     v{lesson.version}.0
                   </td>
                   <td style={{ padding: '1rem 0.5rem' }}>
@@ -99,7 +99,7 @@ export const AdminWorkflow: React.FC<AdminWorkflowProps> = ({
                       {lesson.status}
                     </span>
                   </td>
-                  <td style={{ padding: '1rem 0.5rem', color: '#38bdf8' }}>
+                  <td style={{ padding: '1rem 0.5rem', color: '#007a3c' }}>
                     {lesson.sources.length} cited
                   </td>
                   <td style={{ padding: '1rem 0.5rem', textAlign: 'right' }}>
@@ -124,7 +124,7 @@ export const AdminWorkflow: React.FC<AdminWorkflowProps> = ({
                       </button>
                       <button
                         className="btn btn-ghost"
-                        style={{ fontSize: '0.75rem', padding: '0.3rem 0.6rem', color: '#f43f5e' }}
+                        style={{ fontSize: '0.75rem', padding: '0.3rem 0.6rem', color: '#ef4444' }}
                         onClick={() => handleStatusChange(lesson.id, 'archived')}
                         title="Archive lesson"
                       >

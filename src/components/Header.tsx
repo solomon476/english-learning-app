@@ -123,17 +123,17 @@ export const Header: React.FC<HeaderProps> = ({
               alignItems: 'center', 
               gap: '0.35rem', 
               padding: '0.35rem 0.75rem', 
-              background: 'rgba(56, 189, 248, 0.12)', 
-              border: '1px solid rgba(56, 189, 248, 0.35)', 
+              background: '#f0fdf4', 
+              border: '1px solid #86efac', 
               borderRadius: '20px', 
               fontSize: '0.825rem', 
               fontWeight: 800, 
-              color: '#38bdf8' 
+              color: '#007a3c' 
             }}
             title="Learning Gems Earned"
           >
             <span>💎</span>
-            <span>240</span>
+            <span>{userProfile ? userProfile.totalCompletedLessons * 15 : 0}</span>
           </div>
 
           {/* Daily Streak Flame with Animation */}
@@ -148,7 +148,7 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             id="audio-toggle-btn"
             className="btn-ghost"
-            style={{ padding: '0.4rem', color: soundOn ? '#38bdf8' : '#64748b' }}
+            style={{ padding: '0.4rem', color: soundOn ? '#00a651' : '#64748b' }}
             onClick={handleToggleSound}
             title={soundOn ? 'Sound Effects Enabled (Click to Mute)' : 'Sound Effects Muted (Click to Enable)'}
             aria-label="Toggle Sound Effects"
