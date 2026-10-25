@@ -56,6 +56,7 @@ export const QuizView: React.FC<QuizViewProps> = ({
       const result = await ApiService.submitQuizAttempt(quiz.id, selectedAnswers);
       setAttemptResult(result);
       onCompleted(result);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
 
       if (result.passed) {
         // Play celebratory victory fanfare!
