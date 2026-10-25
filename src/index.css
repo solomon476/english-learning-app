@@ -1258,8 +1258,10 @@
   }
 
   .section-tutor-btn {
-    width: 100%;
-    justify-content: center;
+    align-self: flex-start;
+    padding: 0.4rem 0.95rem;
+    font-size: 0.8rem;
+    border-radius: 9999px;
   }
 
   .reader-article-card {
