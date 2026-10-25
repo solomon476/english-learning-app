@@ -1357,3 +1357,227 @@
   }
 }
 
+/* ==========================================================================
+   Authentication Modal & Account Management
+   ========================================================================== */
+.auth-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 150;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.auth-modal-card {
+  max-width: 460px;
+  width: 100%;
+  border-radius: 24px;
+  padding: 2rem;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18), 0 0 30px rgba(0, 166, 81, 0.15);
+  position: relative;
+  animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.auth-modal-close-btn {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  padding: 0.35rem;
+  color: #64748b;
+  border-radius: 8px;
+}
+
+.auth-modal-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.auth-mascot-avatar {
+  width: 60px;
+  height: 60px;
+  border: 2.5px solid #00a651;
+  flex-shrink: 0;
+}
+
+.auth-modal-tag {
+  font-size: 0.725rem;
+  text-transform: uppercase;
+  color: #007a3c;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.auth-modal-h2 {
+  font-size: 1.45rem;
+  color: #0f172a;
+  margin: 0.15rem 0;
+  line-height: 1.2;
+}
+
+.auth-modal-subtitle {
+  font-size: 0.825rem;
+  color: #475569;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.auth-tab-bar {
+  display: flex;
+  gap: 0.35rem;
+  padding: 0.3rem;
+  background: #f1f5f9;
+  border-radius: 12px;
+  margin-bottom: 1.25rem;
+  border: 1px solid var(--border-subtle);
+}
+
+.auth-tab-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.55rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #64748b;
+  transition: all 0.15s ease;
+}
+
+.auth-tab-btn.active {
+  background: #ffffff;
+  color: #007a3c;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid #86efac;
+}
+
+.auth-alert-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.alert-error {
+  background: #fef2f2;
+  border: 1px solid #fecdd3;
+  color: #b91c1c;
+}
+
+.alert-success {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #15803d;
+}
+
+.auth-form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.auth-input-group label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #334155;
+  margin-bottom: 0.35rem;
+}
+
+.auth-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.auth-input-icon {
+  position: absolute;
+  left: 12px;
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+.auth-text-input {
+  width: 100%;
+  padding: 0.7rem 0.85rem 0.7rem 2.4rem;
+  border-radius: 12px;
+  border: 1px solid #cbd5e1;
+  font-size: 0.9rem;
+  color: #0f172a;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  background: #ffffff;
+}
+
+.auth-text-input:focus {
+  border-color: #00a651;
+  box-shadow: 0 0 0 3px rgba(0, 166, 81, 0.15);
+}
+
+.auth-forgot-link {
+  font-size: 0.75rem;
+  color: #007a3c;
+  font-weight: 700;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.auth-submit-btn {
+  width: 100%;
+  padding: 0.85rem;
+  font-size: 0.95rem;
+  margin-top: 0.35rem;
+  justify-content: center;
+}
+
+.auth-modal-footer {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.65rem;
+  text-align: center;
+}
+
+.auth-privacy-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.72rem;
+  color: #64748b;
+}
+
+.auth-continue-guest-btn {
+  background: none;
+  border: none;
+  font-size: 0.825rem;
+  color: #475569;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+

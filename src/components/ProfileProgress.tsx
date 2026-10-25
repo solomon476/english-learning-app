@@ -11,15 +11,20 @@ import {
   AlertTriangle,
   Edit3,
   Check,
-  X
+  X,
+  Sparkles
 } from 'lucide-react';
 import { UserProfile, LearningProgress, ComplexityLevel, Topic } from '../types';
+import type { AuthUser } from '../services/authService';
 import { ApiService } from '../services/api';
 
 interface ProfileProgressProps {
   userProfile: UserProfile;
   progressMap: Record<string, LearningProgress>;
   topics: Topic[];
+  currentUser: AuthUser | null;
+  onOpenAuth: (mode?: 'signin' | 'signup') => void;
+  onSignOut: () => void;
   onUpdateLevel: (level: ComplexityLevel) => void;
   onRefreshData: () => void;
 }
@@ -28,6 +33,9 @@ export const ProfileProgress: React.FC<ProfileProgressProps> = ({
   userProfile,
   progressMap,
   topics,
+  currentUser,
+  onOpenAuth,
+  onSignOut,
   onUpdateLevel,
   onRefreshData
 }) => {
@@ -89,6 +97,40 @@ export const ProfileProgress: React.FC<ProfileProgressProps> = ({
 
   return (
     <div className="profile-wrapper" style={{ maxWidth: '900px', margin: '0 auto' }}>
+      {/* Account Sync Status Banner */}
+      {currentUser ? (
+        <div className="glass-card" style={{ padding: '1rem 1.5rem', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', background: '#f0fdf4', border: '1px solid #86efac' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <CheckCircle size={20} color="#00a651" />
+            <div>
+              <strong style={{ display: 'block', fontSize: '0.925rem', color: '#007a3c' }}>Cloud Account Synced</strong>
+              <span style={{ fontSize: '0.8rem', color: '#475569' }}>Signed in as <strong>{currentUser.email}</strong>. Streaks and quest milestones persist across all devices.</span>
+            </div>
+          </div>
+          <button className="btn btn-secondary" style={{ padding: '0.45rem 0.85rem', fontSize: '0.85rem' }} onClick={onSignOut}>
+            Sign Out
+          </button>
+        </div>
+      ) : (
+        <div className="glass-card" style={{ padding: '1.25rem 1.5rem', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', background: '#fffbeb', border: '1px solid #fde68a' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <Sparkles size={22} color="#d97706" />
+            <div>
+              <strong style={{ display: 'block', fontSize: '0.95rem', color: '#92400e' }}>Guest Learner Mode</strong>
+              <span style={{ fontSize: '0.825rem', color: '#78350f' }}>Your progress is stored locally on this device. Create an account to sync across devices!</span>
+            </div>
+          </div>
+          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+            <button className="btn btn-primary" style={{ padding: '0.45rem 0.95rem', fontSize: '0.825rem' }} onClick={() => onOpenAuth('signup')}>
+              Create Free Account
+            </button>
+            <button className="btn btn-secondary" style={{ padding: '0.45rem 0.85rem', fontSize: '0.825rem' }} onClick={() => onOpenAuth('signin')}>
+              Sign In
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Profile Overview Card */}
       <div className="glass-card" style={{ padding: '2rem', marginBottom: '1.75rem', background: '#ffffff' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1.25rem' }}>

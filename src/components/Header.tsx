@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
-import { BookOpen, Brain, Flame, Shield, User, FileText, Volume2, VolumeX, Sparkles } from 'lucide-react';
+import { BookOpen, Brain, Flame, Shield, User, FileText, Volume2, VolumeX, Sparkles, LogIn, LogOut } from 'lucide-react';
 import type { UserProfile } from '../types';
+import type { AuthUser } from '../services/authService';
 import { sounds } from '../utils/soundEffects';
 
 interface HeaderProps {
   activeView: 'catalog' | 'lesson' | 'quiz' | 'profile' | 'admin' | 'blueprint';
   onNavigate: (view: 'catalog' | 'lesson' | 'quiz' | 'profile' | 'admin' | 'blueprint') => void;
   userProfile: UserProfile | null;
+  currentUser: AuthUser | null;
+  onOpenAuth: (mode?: 'signin' | 'signup') => void;
+  onSignOut: () => void;
   onOpenTutor: () => void;
   hasActiveLesson: boolean;
 }
@@ -15,6 +19,9 @@ export const Header: React.FC<HeaderProps> = ({
   activeView,
   onNavigate,
   userProfile,
+  currentUser,
+  onOpenAuth,
+  onSignOut,
   onOpenTutor,
   hasActiveLesson
 }) => {
@@ -155,6 +162,50 @@ export const Header: React.FC<HeaderProps> = ({
           >
             {soundOn ? <Volume2 size={18} /> : <VolumeX size={18} />}
           </button>
+
+          {/* User Authentication Status Button */}
+          {currentUser ? (
+            <div className="header-auth-user" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <button
+                id="header-user-profile-btn"
+                className="btn btn-secondary"
+                style={{ padding: '0.35rem 0.75rem', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}
+                onClick={() => handleNavClick('profile')}
+                title={`Signed in as ${currentUser.email}`}
+              >
+                <User size={14} color="#00a651" />
+                <span style={{ maxWidth: '90px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {currentUser.displayName}
+                </span>
+              </button>
+              <button
+                id="header-logout-btn"
+                className="btn-ghost"
+                style={{ padding: '0.35rem', color: '#64748b' }}
+                onClick={() => {
+                  sounds.playPop();
+                  onSignOut();
+                }}
+                title="Log Out"
+                aria-label="Log Out"
+              >
+                <LogOut size={16} />
+              </button>
+            </div>
+          ) : (
+            <button
+              id="header-login-btn"
+              className="btn btn-secondary"
+              style={{ padding: '0.45rem 0.95rem', fontSize: '0.825rem', gap: '0.35rem' }}
+              onClick={() => {
+                sounds.playPop();
+                onOpenAuth('signin');
+              }}
+            >
+              <LogIn size={15} color="#00a651" />
+              <span>Log In</span>
+            </button>
+          )}
 
           {/* AI Tutor 3D Button (Desktop only) */}
           <button

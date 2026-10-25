@@ -11,6 +11,8 @@ import { AdminWorkflow } from './components/AdminWorkflow';
 import { AITutorDrawer } from './components/AITutorDrawer';
 import { BlueprintDrawer } from './components/BlueprintDrawer';
 import { MobileNav } from './components/MobileNav';
+import { AuthModal } from './components/AuthModal';
+import { AuthService, AuthUser } from './services/authService';
 import { sounds } from './utils/soundEffects';
 
 export function App() {
@@ -20,6 +22,9 @@ export function App() {
   const [currentQuiz, setCurrentQuiz] = useState<Quiz | null>(null);
   const [progressMap, setProgressMap] = useState<Record<string, LearningProgress>>({});
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
+  const [authModalMode, setAuthModalMode] = useState<'signin' | 'signup'>('signin');
   const [isTutorOpen, setIsTutorOpen] = useState<boolean>(false);
   const [tutorQuery, setTutorQuery] = useState<string>('');
   const [isBlueprintOpen, setIsBlueprintOpen] = useState<boolean>(false);
@@ -29,15 +34,17 @@ export function App() {
   useEffect(() => {
     async function loadInitialData() {
       try {
-        const [loadedTopics, loadedProfile, loadedProgress] = await Promise.all([
+        const [loadedTopics, loadedProfile, loadedProgress, initialUser] = await Promise.all([
           ApiService.getTopics(),
           ApiService.getUserProfile(),
-          ApiService.getProgressMap()
+          ApiService.getProgressMap(),
+          AuthService.getCurrentUser()
         ]);
 
         setTopics(loadedTopics);
         setUserProfile(loadedProfile);
         setProgressMap(loadedProgress);
+        setCurrentUser(initialUser);
 
         // Set default active lesson if in-progress exists
         const inProgressEntry = Object.values(loadedProgress).find((p) => p.status === 'in_progress');
@@ -60,7 +67,30 @@ export function App() {
     }
 
     loadInitialData();
+
+    // Subscribe to auth state updates
+    const unsubscribeAuth = AuthService.onAuthStateChange(async (user) => {
+      setCurrentUser(user);
+      const updatedProfile = await ApiService.getUserProfile();
+      setUserProfile(updatedProfile);
+    });
+
+    return () => {
+      unsubscribeAuth();
+    };
   }, []);
+
+  const handleOpenAuth = (mode: 'signin' | 'signup' = 'signin') => {
+    setAuthModalMode(mode);
+    setIsAuthModalOpen(true);
+  };
+
+  const handleSignOut = async () => {
+    await AuthService.signOut();
+    setCurrentUser(null);
+    sounds.playPop();
+    await refreshAllData();
+  };
 
   const handleSelectLesson = async (lesson: Lesson) => {
     setCurrentLesson(lesson);
@@ -133,6 +163,9 @@ export function App() {
           }
         }}
         userProfile={userProfile}
+        currentUser={currentUser}
+        onOpenAuth={handleOpenAuth}
+        onSignOut={handleSignOut}
         onOpenTutor={() => setIsTutorOpen(true)}
         hasActiveLesson={!!currentLesson}
       />
@@ -177,6 +210,9 @@ export function App() {
                 userProfile={userProfile}
                 progressMap={progressMap}
                 topics={topics}
+                currentUser={currentUser}
+                onOpenAuth={handleOpenAuth}
+                onSignOut={handleSignOut}
                 onUpdateLevel={handleUpdateLevel}
                 onRefreshData={refreshAllData}
               />
@@ -243,6 +279,17 @@ export function App() {
       <BlueprintDrawer
         isOpen={isBlueprintOpen}
         onClose={() => setIsBlueprintOpen(false)}
+      />
+
+      {/* Authentication Modal (Sign In / Register / Password Recovery) */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        onSuccess={(user) => {
+          setCurrentUser(user);
+          refreshAllData();
+        }}
+        initialMode={authModalMode}
       />
     </div>
   );
